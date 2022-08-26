@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import StatoscopePlugin from '@statoscope/webpack-plugin';
 
 import ModuleLogger from './plugins/moduleLogger';
+import ExcludedFilesPlugin from './plugins/moduleExcludedFiles'
 
 const config: webpack.Configuration = {
     mode: 'production',
@@ -23,14 +24,23 @@ const config: webpack.Configuration = {
             saveOnlyStats: false,
             open: false,
         }),
+        new ExcludedFilesPlugin()
     ],
     resolve: {
         fallback: {
             "buffer": require.resolve("buffer"),
             "stream": false,
         },
+        extensions: ['.ts', '.js', '.json', '.tsx', '.jsx']
     },
     module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            }
+        ]
     },
 };
 
